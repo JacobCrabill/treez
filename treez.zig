@@ -67,13 +67,32 @@ pub const InputEdit = extern struct {
 };
 
 pub const Language = opaque {
-    pub const GetError = error{Unknown};
+    pub const GetError = error{ SymbolNotFound, LibraryNotFound, PrintError, Unknown };
     pub fn get(comptime language_name: []const u8) GetError!*const Language {
         const ext = @extern(?*const fn () callconv(.C) ?*const Language, .{
             .name = std.fmt.comptimePrint("tree_sitter_{s}", .{language_name}),
         }) orelse @compileError(std.fmt.comptimePrint("Cannot find extern tree_sitter_{s}", .{language_name}));
 
         return ext() orelse error.Unknown;
+    }
+
+    /// Load the 'tree_sitter_{language}' function from the 'tree-sitter-{language}' dynamic library
+    pub fn loadFromDynLib(language: []const u8) GetError!*const Language {
+        var buffer: [1024]u8 = undefined;
+        const lib_name = std.fmt.bufPrintZ(buffer[0..], "libtree-sitter-{s}.so", .{language}) catch return error.PrintError;
+
+        const RTLD_LAZY: i32 = 1;
+        const lib = std.c.dlopen(lib_name, RTLD_LAZY) orelse return error.LibraryNotFound;
+        // TODO!  In order to be useful, this would have to be closed much later by the caller
+        // defer _ = std.c.dlclose(lib);
+
+        const fn_name = std.fmt.bufPrintZ(buffer[0..], "tree_sitter_{s}", .{language}) catch return error.PrintError;
+        if (std.c.dlsym(lib, fn_name)) |ts_lang_fn| {
+            const lang_fn_t: type = fn () *const Language;
+            const make_lang = @as(*const lang_fn_t, @ptrCast(@alignCast(ts_lang_fn)));
+            return make_lang();
+        }
+        return error.SymbolNotFound;
     }
 
     pub fn getSymbolCount(language: *const Language) u32 {
@@ -836,7 +855,7 @@ pub const Query = opaque {
 // Higher level constructs
 
 pub const CursorWithValidation = struct {
-    // We only support #eq?
+    // We only support '#eq?'
 
     pub const EqualPredicate = struct {
         a: []const u8,
@@ -868,6 +887,8 @@ pub const CursorWithValidation = struct {
             var predicate_len: u32 = 0;
             while (index < preds.len) {
                 if (preds[index].type != .string) @panic("Unexpected predicate value");
+                // TODO: Check out: tree-sitter/lib/binding_rust/lib.rs, fn 'from_raw_parts'
+                // Specifically see: 'match operator_name { ...'
                 if (!std.mem.eql(u8, query.getStringValueForId(@as(u32, @intCast(preds[index].value_id))), "eq?")) @panic("Only the 'eq?' predicate is supported by treez at the moment.");
                 if (preds[index + 1].type != .capture) @panic("Unexpected predicate value");
 

@@ -7,6 +7,10 @@
             .url = "https://github.com/tree-sitter/tree-sitter/archive/25c7189180849be27b1e552d27f0488e3bd5900d.tar.gz",
             .hash = "122014699420476e54c5f4ce36bfd62d0871acd5b1355a0c5c8e94ad128576d953f8",
         },
+        // .@"tree-sitter-zig" = .{
+        //     .url = "https://github.com/ziglibs/tree-sitter-zig/archive/2866ee6f8b8f67c9b1eca2ca6c88f0a5f1bcc13f.tar.gz",
+        //     .hash = "1220ae2c2190a0a2d10a68880952d365d7ccb64c8148e2bb9aadea938cb50e8baec6",
+        // },
     },
 
     .paths = .{
