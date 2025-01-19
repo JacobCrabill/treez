@@ -12,7 +12,7 @@ pub fn build(b: *std.Build) void {
     // Tree-Sitter Library Dependency
     // This builds the tree-sitter library from source
     // We'll require the treez module to be linked to this library below
-    const ts = b.dependency("tree-sitter", .{ .optimize = optimize, .target = target });
+    const ts = b.dependency("tree_sitter", .{ .optimize = optimize, .target = target });
     const ts_lib = ts.artifact("tree-sitter");
     b.installArtifact(ts_lib);
 

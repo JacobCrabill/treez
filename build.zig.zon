@@ -1,11 +1,11 @@
 .{
-    .name = "treez",
+    .name = .treez,
+    .fingerprint = 0xed00d70e85fd95e0,
     .version = "0.1.0",
-
     .dependencies = .{
-        .@"tree-sitter" = .{
-            .url = "https://github.com/tree-sitter/tree-sitter/archive/25c7189180849be27b1e552d27f0488e3bd5900d.tar.gz",
-            .hash = "122014699420476e54c5f4ce36bfd62d0871acd5b1355a0c5c8e94ad128576d953f8",
+        .tree_sitter = .{
+            .url = "https://github.com/JacobCrabill/tree-sitter/archive/b5ad271750130470cb2d623c36885b4119f3e649.tar.gz",
+            .hash = "tree_sitter-0.26.0-Tw2sRze4CwBXko_uJgxJ1MkugKV8iVAQuPLxNRHrcqab",
         },
         // .@"tree-sitter-zig" = .{
         //     .url = "https://github.com/ziglibs/tree-sitter-zig/archive/2866ee6f8b8f67c9b1eca2ca6c88f0a5f1bcc13f.tar.gz",

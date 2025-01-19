@@ -81,7 +81,7 @@ pub const Language = opaque {
         var buffer: [1024]u8 = undefined;
         const lib_name = std.fmt.bufPrintZ(buffer[0..], "libtree-sitter-{s}.so", .{language}) catch return error.PrintError;
 
-        const RTLD_LAZY: i32 = 1;
+        const RTLD_LAZY = std.c.RTLD{ .LAZY = true };
         const lib = std.c.dlopen(lib_name, RTLD_LAZY) orelse return error.LibraryNotFound;
         // TODO!  In order to be useful, this would have to be closed much later by the caller
         // defer _ = std.c.dlclose(lib);
