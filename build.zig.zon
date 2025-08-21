@@ -1,11 +1,14 @@
 .{
     .name = .treez,
     .fingerprint = 0xed00d70e85fd95e0,
-    .version = "0.1.0",
+    .version = "0.2.0",
+    .minimum_zig_version = "0.15.1",
     .dependencies = .{
         .tree_sitter = .{
-            .url = "https://github.com/tree-sitter/tree-sitter/archive/e3db212b0b12a189010979b4c129a792009e8361.tar.gz",
-            .hash = "tree_sitter-0.26.0-Tw2sRze4CwBXko_uJgxJ1MkugKV8iVAQuPLxNRHrcqab",
+            // .url = "https://github.com/tree-sitter/tree-sitter/archive/e3db212b0b12a189010979b4c129a792009e8361.tar.gz",
+            // .hash = "tree_sitter-0.26.0-Tw2sRze4CwBXko_uJgxJ1MkugKV8iVAQuPLxNRHrcqab",
+            .url = "https://github.com/JacobCrabill/tree-sitter/archive/168ffad245131be4382c0f20938fd54a548feddd.tar.gz",
+            .hash = "tree_sitter-0.26.0-1-Tw2sR8G6CwC1KrLeOIcy0vIjmiYYa2OkZzZ-ZV6QPVbg",
         },
         // .@"tree-sitter-zig" = .{
         //     .url = "https://github.com/ziglibs/tree-sitter-zig/archive/2866ee6f8b8f67c9b1eca2ca6c88f0a5f1bcc13f.tar.gz",

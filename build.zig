@@ -33,13 +33,15 @@ pub fn build(b: *std.Build) void {
     if (build_example) |_| {
         const exe = b.addExecutable(.{
             .name = "treez-example",
-            // In this case the main source file is merely a path, however, in more
-            // complicated build scripts, this could be a generated file.
-            .root_source_file = b.path("example/example.zig"),
-            .target = target,
-            .optimize = optimize,
+            .root_module = b.createModule(.{
+                // In this case the main source file is merely a path, however, in more
+                // complicated build scripts, this could be a generated file.
+                .root_source_file = b.path("example/example.zig"),
+                .target = target,
+                .optimize = optimize,
+                .link_libc = true,
+            }),
         });
-        exe.linkLibC();
 
         // Give the executable access to the 'treez' module
         // This includes the transitive dependency on libtree-sitter
