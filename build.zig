@@ -54,7 +54,7 @@ pub fn build(b: *std.Build) void {
         // exe.linkSystemLibrary("tree-sitter-zig");
 
         // Option two: Specify static linking preferred
-        exe.linkSystemLibrary2("tree-sitter-zig", .{ .preferred_link_mode = .static });
+        exe.root_module.linkSystemLibrary("tree-sitter-zig", .{ .preferred_link_mode = .static });
 
         b.installArtifact(exe);
 
