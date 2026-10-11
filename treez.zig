@@ -79,14 +79,14 @@ pub const Language = opaque {
     /// Load the 'tree_sitter_{language}' function from the 'tree-sitter-{language}' dynamic library
     pub fn loadFromDynLib(language: []const u8) GetError!*const Language {
         var buffer: [1024]u8 = undefined;
-        const lib_name = std.fmt.bufPrintZ(buffer[0..], "libtree-sitter-{s}.so", .{language}) catch return error.PrintError;
+        const lib_name = std.fmt.bufPrintSentinel(buffer[0..], "libtree-sitter-{s}.so", .{language}, 0) catch return error.PrintError;
 
         const RTLD_LAZY = std.c.RTLD{ .LAZY = true };
         const lib = std.c.dlopen(lib_name, RTLD_LAZY) orelse return error.LibraryNotFound;
         // TODO!  In order to be useful, this would have to be closed much later by the caller
         // defer _ = std.c.dlclose(lib);
 
-        const fn_name = std.fmt.bufPrintZ(buffer[0..], "tree_sitter_{s}", .{language}) catch return error.PrintError;
+        const fn_name = std.fmt.bufPrintSentinel(buffer[0..], "tree_sitter_{s}", .{language}, 0) catch return error.PrintError;
         if (std.c.dlsym(lib, fn_name)) |ts_lang_fn| {
             const lang_fn_t: type = fn () *const Language;
             const make_lang = @as(*const lang_fn_t, @ptrCast(@alignCast(ts_lang_fn)));
@@ -875,8 +875,8 @@ pub const CursorWithValidation = struct {
     capture_name_to_id: CaptureIdNameMap,
 
     pub fn init(allocator: std.mem.Allocator, query: *const Query) !CursorWithValidation {
-        var predicates = PredicateList{};
-        var predicate_map = PredicateMap{};
+        var predicates = PredicateList.empty;
+        var predicate_map = PredicateMap.empty;
 
         var capture_name_to_id = CaptureIdNameMap{};
 
